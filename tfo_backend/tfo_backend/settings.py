@@ -156,7 +156,17 @@ CHANNEL_LAYERS = {
         },
     },
 }
+from celery.schedules import crontab
 
+
+CELERY_BEAT_SCHEDULE = {
+    "sample_task": {
+        "task": "organizations.tasks.send_eod_report",
+        "schedule": crontab(hour=12, minute=30),  # 12:30 PM UTC = 6:00 PM IST
+    },
+}
+
+CELERY_TIMEZONE = "Asia/Kolkata"  # Ensures the scheduler follows IST
 CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Redis as the broker
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'  # Redis as the result backend
 CELERY_RESULT_BACKEND = 'django-db'
